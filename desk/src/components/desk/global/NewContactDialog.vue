@@ -35,6 +35,14 @@
 						/>
 						<ErrorMessage :message="phoneValidationError" />
 					</div>
+					<div class="space-y-1">
+						<Input
+							label="Organization (optional)"
+							type="text"
+							v-model="organization"
+						/>
+						<ErrorMessage :message="organizationValidationError" />
+					</div>
 					<div class="flex float-right space-x-2">
 						<Button
 							:loading="this.$resources.createContact.loading"
@@ -66,6 +74,7 @@ export default {
 		const firstNameValidationError = ref("")
 		const lastNameValidationError = ref("")
 		const phoneValidationError = ref("")
+		const organizationValidationError = ref("")
 
 		const contacts = inject("contacts")
 
@@ -86,6 +95,7 @@ export default {
 			firstNameValidationError,
 			lastNameValidationError,
 			phoneValidationError,
+			organizationValidationError,
 		}
 	},
 	data() {
@@ -94,6 +104,7 @@ export default {
 			lastName: "",
 			emailId: "",
 			phone: "",
+			organization: "",
 		}
 	},
 	watch: {
@@ -116,8 +127,9 @@ export default {
 					this.firstName = ""
 					this.lastName = ""
 					this.phone = ""
-
+					this.organization = ""
 					this.$emit("contactCreated", data)
+					this.$router.go()
 				},
 			}
 		},
@@ -137,15 +149,14 @@ export default {
 				doctype: "Contact",
 				first_name: this.firstName,
 				last_name: this.lastName,
+				organization: this.organization,
 				email_ids: [{ email_id: this.emailId, is_primary: true }],
 			}
 			if (this.phone) {
 				doc.phone_nos = [{ phone: this.phone }]
 			}
 
-			this.$resources.createContact.submit({
-				doc,
-			})
+			this.$resources.createContact.submit({doc})
 		},
 		validateInputs() {
 			let error = this.validateEmailInput(this.emailId)

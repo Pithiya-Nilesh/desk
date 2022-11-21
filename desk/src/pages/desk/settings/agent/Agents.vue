@@ -1,45 +1,37 @@
 <template>
 	<div class="mt-[9px]">
-		<ListManager
-			ref="listManager"
-			class="px-[16px]"
-			:options="{
-				cache: ['Agents', 'Desk'],
-				doctype: 'Agent',
-				fields: [
-					'user as email',
-					'user.full_name as full_name',
-					'group',
-				],
-				limit: 20,
-			}"
-			@selection="
-				(selectedItems) => {
-					if (Object.keys(selectedItems).length > 0) {
-						$event.emit(
-							'show-top-panel-actions-settings',
-							'Agents Bulk'
-						)
-					} else {
-						$event.emit('show-top-panel-actions-settings', 'Agents')
-					}
-				}
-			"
-		>
+		<ListManager ref="listManager" class="px-[16px]" :options="{
+			cache: ['Agents', 'Desk'],
+			doctype: 'Agent',
+			fields: [
+				'user as email',
+				'user.full_name as full_name',
+				'group',
+			],
+			limit: 20,
+		}" @selection="
+	(selectedItems) => {
+		if (Object.keys(selectedItems).length > 0) {
+			$event.emit(
+				'show-top-panel-actions-settings',
+				'Agents Bulk'
+			)
+		} else {
+			$event.emit('show-top-panel-actions-settings', 'Agents')
+		}
+	}
+">
 			<template #body="{ manager }">
 				<AgentList :manager="manager" />
 			</template>
 		</ListManager>
-		<AddNewAgentsDialog
-			:show="showNewAgentDialog"
-			@close="
-				() => {
-					showNewAgentDialog = false
-					$refs.listManager.manager.reload()
-					$router.go() // TODO: this is a hack
-				}
-			"
-		/>
+		<AddNewAgentsDialog :show="showNewAgentDialog" @close="
+	() => {
+		showNewAgentDialog = false
+		$refs.listManager.manager.reload()
+		$router.go() // TODO: this is a hack
+	}
+		" />
 	</div>
 </template>
 <script>
@@ -72,9 +64,7 @@ export default {
 		})
 		this.$event.on("delete-selected-agents", () => {
 			this.$resources.bulk_delete_agents.submit({
-				items: Object.keys(
-					this.$refs.listManager.manager.selectedItems
-				),
+				items: Object.keys(this.$refs.listManager.manager.selectedItems),
 				doctype: "Agent",
 			})
 		})

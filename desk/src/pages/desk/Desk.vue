@@ -40,6 +40,11 @@ export default {
 		const contacts = ref([])
 		const contactController = ref({})
 
+		const contactName = ref([])
+		const contactEmail = ref([])
+		const contactPhone = ref([])
+		const contactOrganization = ref([])
+
 		const agents = ref([])
 		const agentGroups = ref([])
 		const agentController = ref({})
@@ -65,6 +70,11 @@ export default {
 		provide("contacts", contacts)
 		provide("contactController", contactController)
 
+		provide("contactName", contactName)
+		provide("contactEmail", contactEmail)
+		provide("contactPhone", contactPhone)
+		provide("contactOrganization", contactOrganization)
+
 		provide("agents", agents)
 		provide("agentGroups", agentGroups)
 		provide("agentController", agentController)
@@ -81,6 +91,10 @@ export default {
 
 			contacts,
 			contactController,
+			contactName,
+			contactEmail,
+			contactPhone,
+			contactOrganization,
 
 			agents,
 			agentGroups,
@@ -440,8 +454,9 @@ export default {
 				onError: () => {
 					// TODO:
 				},
-			}
+			}			
 		},
+
 		agents() {
 			return {
 				method: "frappe.client.get_list",
@@ -458,6 +473,66 @@ export default {
 				},
 			}
 		},
+
+		name() {
+			return {
+				method: "frappe.client.get_list",
+				params: {
+					doctype: "Contact",
+					fields: ["*"],
+					limit_page_length: 0,
+				},
+				auto: this.user.has_desk_access,
+				onSuccess: (data) => {
+					this.contactName = data
+				},
+				onError: () => {
+					// TODO:
+				},
+			}			
+		},
+		email() {
+			return {
+				method: "frappedesk.api.contact.get_contact_email",
+				auto: this.user.has_desk_access,
+				onSuccess: (data) => {
+					this.contactEmail = data
+				},
+				onError: () => {
+					// TODO:
+				},
+			}			
+		},
+		// phone() {
+		// 	return {
+		// 		method: "frappe.client.get_list",
+		// 		params: {
+		// 			doctype: "Contact",
+		// 			fields: ["phone"],
+		// 			limit_page_length: 0,
+		// 		},
+		// 		auto: this.user.has_desk_access,
+		// 		onSuccess: (data) => {
+		// 			this.contactPhone = data
+		// 		},
+		// 		onError: () => {
+		// 			// TODO:
+		// 		},
+		// 	}			
+		// },
+		organization() {
+			return {
+				method: "frappedesk.api.contact.get_contact_organization",
+				auto: this.user.has_desk_access,
+				onSuccess: (data) => {
+					this.contactOrganization = data
+				},
+				onError: () => {
+					// TODO:
+				},
+			}			
+		},
+
 		agentGroups() {
 			return {
 				method: "frappe.client.get_list",

@@ -16,10 +16,10 @@
 				:to="`/frappedesk/contacts/${contact.name}`"
 				class="w-full group flex items-center"
 			>
-				<div class="sm:w-5/12 truncate pr-10">
+				<div class="sm:w-3/12 truncate pr-10">
 					{{ fullName }}
 				</div>
-				<div class="sm:w-6/12 truncate pr-10">
+				<div class="sm:w-3/12 truncate pr-10">
 					<div v-if="contact.email && contact.email.length > 0">
 						{{ contact.email }}
 					</div>
@@ -27,6 +27,11 @@
 				<div class="sm:w-3/12 truncate pr-10">
 					<div v-if="contact.phone && contact.phone.length > 0">
 						{{ contact.phone }}
+					</div>
+				</div>
+				<div class="sm:w-3/12 truncate pr-10">
+					<div v-if="contact.organization && contact.organization.length > 0">
+						{{ contact.organization }}
 					</div>
 				</div>
 			</router-link>

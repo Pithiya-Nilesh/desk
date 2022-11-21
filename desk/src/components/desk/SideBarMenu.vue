@@ -376,6 +376,14 @@ export default {
 				},
 			},
 			{
+				label: "Go to My Profile page",
+				customIcon: "external-link",
+				style: "text-gray-800",
+				action: () => {
+					window.open("/support/tickets", "_blank")
+				},
+			},
+			{
 				label: "Log out",
 				customIcon: "log-out",
 				style: "text-red-600",

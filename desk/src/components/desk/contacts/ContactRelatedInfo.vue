@@ -4,52 +4,53 @@
 			<div class="grow my-auto text-[16px] font-semibold text-gray-900">
 				Tickets
 			</div>
+			<Button icon-left="plus" appearance="primary" @click="
+				() => {
+					showNewTicketDialog = true
+				}
+			">Add Ticket</Button>
 		</div>
 		<div class="w-full max-w-full grow-0">
-			<ListManager
-				ref="miniTicketList"
-				:options="{
-					doctype: 'Ticket',
-					fields: ['subject', 'ticket_type', 'status', '_seen'],
-					limit: 50,
-					order_by: 'modified desc',
-					filters: {
-						contact: ['=', contact],
-					},
-				}"
-			>
+			<ListManager ref="miniTicketList" :options="{
+				doctype: 'Ticket',
+				fields: ['subject', 'ticket_type', 'status', '_seen'],
+				limit: 50,
+				order_by: 'modified desc',
+				filters: {
+					contact: ['=', contact],
+				},
+			}">
 				<template #body="{ manager }">
 					<div>
-						<MiniTicketList
-							:manager="manager"
-							size="lg"
-							class="overflow-y-scroll"
-							:style="{
-								height:
-									viewportWidth > 768
-										? 'calc(100vh - 144px)'
-										: null,
-							}"
-						/>
+						<MiniTicketList :manager="manager" size="lg" class="overflow-y-scroll" :style="{
+							height:
+								viewportWidth > 768
+									? 'calc(100vh - 144px)'
+									: null,
+						}" />
 						<div class="pb-2">
-							<Button
-								v-if="manager.hasNextPage"
-								@click="manager.nextPage()"
-							>
+							<Button v-if="manager.hasNextPage" @click="manager.nextPage()">
 								Load More
 							</Button>
 						</div>
 					</div>
 				</template>
 			</ListManager>
+			<NewTicketDialog v-model="showNewTicketDialog" @ticket-created="
+	() => {
+		showNewTicketDialog = false
+		this.$router.go()
+	}
+		" />
 		</div>
 	</div>
 </template>
 
 <script>
 import MiniTicketList from "@/components/desk/global/MiniTicketList.vue"
+import NewTicketDialog from "@/components/desk/tickets/NewTicketDialog.vue"
 import ListManager from "@/components/global/ListManager.vue"
-import { inject } from "vue"
+import { inject, ref } from "vue"
 
 export default {
 	name: "ContactRelatedInfo",
@@ -57,15 +58,20 @@ export default {
 	components: {
 		MiniTicketList,
 		ListManager,
+		NewTicketDialog,
 	},
 	setup() {
 		const viewportWidth = inject("viewportWidth")
+		const showNewTicketDialog = ref(false)
 
 		return {
 			viewportWidth,
+			showNewTicketDialog,
 		}
 	},
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

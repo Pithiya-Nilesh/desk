@@ -82,7 +82,8 @@ export default {
 			selectAll: () => {
 				if (allItemsSelected.value) {
 					manager.value.unselect()
-				} else {
+				} 
+				else {
 					for (let i = 0; i < manager.value.list.length; i++) {
 						selectedItems.value[manager.value.list[i].name] =
 							manager.value.list[i]
@@ -91,6 +92,7 @@ export default {
 				context.emit("selection", selectedItems.value)
 			},
 			select: (rowData) => {
+				// alert("select")
 				if (selectionMode.value == 0) {
 					selectionMode.value = 1
 				}
@@ -114,6 +116,9 @@ export default {
 					}
 				}
 				manager.value.update({ order_by: newOrderBy })
+			},
+			delete: (rowData) => {
+				alert("delete", rowData)
 			},
 		})
 

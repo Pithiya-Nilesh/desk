@@ -1,72 +1,50 @@
 <template>
 	<div>
-		<ListManager
-			v-if="listManagerInitialised"
-			class="px-[16px]"
-			ref="ticketList"
-			:options="{
-				cache: ['Ticket', 'Desk'],
-				doctype: 'Ticket',
-				fields: [
-					'priority',
-					'name',
-					'subject',
-					'ticket_type',
-					'status',
-					'contact',
-					'response_by',
-					'resolution_by',
-					'agreement_status',
-					'modified',
-					'_assign',
-					'_seen',
-				],
-				limit: 20,
-				order_by: 'modified desc',
-				filters: initialFilters,
-			}"
-		>
+		<ListManager v-if="listManagerInitialised" class="px-[16px]" ref="ticketList" :options="{
+			cache: ['Ticket', 'Desk'],
+			doctype: 'Ticket',
+			fields: [
+				'priority',
+				'name',
+				'subject',
+				'ticket_type',
+				'status',
+				'contact',
+				'response_by',
+				'resolution_by',
+				'agreement_status',
+				'modified',
+				'_assign',
+				'_seen',
+			],
+			limit: 20,
+			order_by: 'modified desc',
+			filters: initialFilters,
+		}">
 			<template #body="{ manager }">
 				<div>
 					<div class="flow-root py-[22px] h-[72px]">
 						<div class="float-left"></div>
 						<div class="float-right">
 							<!-- TODO: add v-on-outside-click="() => { toggleFilters = false }" -->
-							<div
-								v-if="
-									Object.keys(manager.selectedItems).length >
-									0
-								"
-								class="flex space-x-3"
-							>
-								<Button
-									:loading="
-										$resources.bulkAssignTicketStatus
-											.loading
-									"
-									@click="markSelectedTicketsAsClosed()"
-									>Mark as Closed</Button
-								>
-								<Dropdown
-									v-if="agents"
-									placement="right"
-									:options="agentsAsDropdownOptions()"
-									:dropdown-width-full="true"
-								>
+							<div v-if="
+								Object.keys(manager.selectedItems).length >
+								0
+							" class="flex space-x-3">
+								<Button :loading="
+									$resources.bulkAssignTicketStatus
+										.loading
+								" @click="markSelectedTicketsAsClosed()">Mark as Closed</Button>
+								<Dropdown v-if="agents" placement="right" :options="agentsAsDropdownOptions()"
+									:dropdown-width-full="true">
 									<template v-slot="{ toggleAssignees }">
 										<div class="flex flex-col">
-											<Button
-												:loading="
-													$resources
-														.bulkAssignTicketToAgent
-														.loading
-												"
-												@click="toggleAssignees"
-												class="cursor-pointer"
-											>
-												<div
-													class="flex items-center space-x-2"
-												>
+											<Button :loading="
+												$resources
+													.bulkAssignTicketToAgent
+													.loading
+											" @click="toggleAssignees" class="cursor-pointer">
+												<div class="flex items-center space-x-2">
 													<div>Assign</div>
 												</div>
 											</Button>
@@ -76,67 +54,43 @@
 							</div>
 							<div v-else class="flex items-center space-x-3">
 								<div>
-									<FilterBox
-										class="mt-6"
-										v-if="toggleFilters"
-										@close="
-											() => {
-												toggleFilters = false
-											}
-										"
-										:options="filterBoxOptions()"
-										v-model="filters"
-									/>
-								</div>
-								<div
-									class="stroke-blue-500 fill-blue-500 w-0 h-0 block"
-								></div>
-								<Button
-									:class="
-										Object.keys(filters).length == 0
-											? 'bg-gray-100 text-gray-600'
-											: 'bg-blue-100 text-blue-500 hover:bg-blue-300'
-									"
-									@click="
+									<FilterBox class="mt-6" v-if="toggleFilters" @close="
 										() => {
-											toggleFilters = !toggleFilters
+											toggleFilters = false
 										}
-									"
-								>
+									" :options="filterBoxOptions()" v-model="filters" />
+								</div>
+								<div class="stroke-blue-500 fill-blue-500 w-0 h-0 block"></div>
+								<Button :class="
+									Object.keys(filters).length == 0
+										? 'bg-gray-100 text-gray-600'
+										: 'bg-blue-100 text-blue-500 hover:bg-blue-300'
+								" @click="
+	() => {
+		toggleFilters = !toggleFilters
+	}
+">
 									<div class="flex items-center space-x-2">
-										<CustomIcons
-											height="18"
-											width="18"
-											name="filter"
-											:class="
-												Object.keys(filters).length > 0
-													? 'stroke-blue-500 fill-blue-500'
-													: 'stroke-black'
-											"
-										/>
+										<CustomIcons height="18" width="18" name="filter" :class="
+											Object.keys(filters).length > 0
+												? 'stroke-blue-500 fill-blue-500'
+												: 'stroke-black'
+										" />
 										<div>Add Filters</div>
-										<div
-											class="bg-blue-500 text-white px-1.5 rounded"
-											v-if="
-												Object.keys(filters).length > 0
-											"
-										>
+										<div class="bg-blue-500 text-white px-1.5 rounded" v-if="
+											Object.keys(filters).length > 0
+										">
 											{{
-												Object.keys(this.filters).length
+													Object.keys(this.filters).length
 											}}
 										</div>
 									</div>
 								</Button>
-								<Button
-									icon-left="plus"
-									appearance="primary"
-									@click="
-										() => {
-											showNewTicketDialog = true
-										}
-									"
-									>Add Ticket</Button
-								>
+								<Button icon-left="plus" appearance="primary" @click="
+									() => {
+										showNewTicketDialog = true
+									}
+								">Add Ticket</Button>
 							</div>
 						</div>
 					</div>
@@ -144,14 +98,11 @@
 				</div>
 			</template>
 		</ListManager>
-		<NewTicketDialog
-			v-model="showNewTicketDialog"
-			@ticket-created="
-				() => {
-					showNewTicketDialog = false
-				}
-			"
-		/>
+		<NewTicketDialog v-model="showNewTicketDialog" @ticket-created="
+	() => {
+		showNewTicketDialog = false
+	}
+		" />
 	</div>
 </template>
 <script>
@@ -192,7 +143,6 @@ export default {
 		const ticketStatuses = inject("ticketStatuses")
 		const agents = inject("agents")
 		const contacts = inject("contacts")
-
 		return {
 			user,
 			showNewTicketDialog,
